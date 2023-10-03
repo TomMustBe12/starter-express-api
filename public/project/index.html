@@ -1,2 +1,39 @@
-all projects are in this directory (that have been retrieved)<br><br><br>
-<a href="../">see list</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Directory Listing</title>
+</head>
+<body>
+    <h1>Directory Listing</h1>
+    <ul id="directory-list"></ul>
+
+    <script>
+        // Function to fetch and list directories
+        async function listDirectories() {
+            try {
+                const response = await fetch('/listDirectories');
+                const data = await response.json();
+                const directoryList = document.getElementById('directory-list');
+
+                data.forEach((directory) => {
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.textContent = directory;
+                    link.href = `./${directory}`;
+                    link.target = '_blank'; // Opens the link in a new tab
+                    listItem.appendChild(link);
+                    directoryList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Call the function to list directories
+        listDirectories();
+    </script>
+    <br>
+    Projects are also in this directory.
+</body>
+</html>

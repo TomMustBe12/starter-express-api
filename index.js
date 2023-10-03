@@ -11,6 +11,38 @@ let userCount = 0;
 
 app.use(cors());
 
+app.get('/listDirectories', (req, res) => {
+    const directoryPath = path.join(__dirname, 'public/project');
+    listDirectories(directoryPath)
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((error) => {
+        res.status(500).json({ error: 'Failed to list directories' });
+      });
+  });
+  
+  function listDirectories(directory) {
+    return new Promise((resolve, reject) => {
+      fs.readdir(directory, { withFileTypes: true }, (err, files) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+  
+        const directories = [];
+  
+        for (const file of files) {
+          if (file.isDirectory()) {
+            directories.push(file.name);
+          }
+        }
+  
+        resolve(directories);
+      });
+    });
+  }
+
 // Function to read from a file using a Promise
 function readFromFile(filePath) {
   return new Promise((resolve, reject) => {

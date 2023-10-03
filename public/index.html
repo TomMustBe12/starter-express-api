@@ -5,36 +5,33 @@
     <title>Directory Listing</title>
 </head>
 <body>
-    <h2>Project</h2>
-    <ul id="directory-list">
-        <!-- The list of directories will be displayed here -->
-    </ul>
+    <h1>Directory Listing</h1>
+    <ul id="directory-list"></ul>
 
     <script>
-        // Function to fetch and list directories recursively
-        function listDirectories(directory, parentElement) {
-            fetch(directory)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(item => {
-                        if (item.isDirectory) {
-                            const listItem = document.createElement('li');
-                            listItem.textContent = item.name;
-                            parentElement.appendChild(listItem);
+        // Function to fetch and list directories
+        async function listDirectories() {
+            try {
+                const response = await fetch('/listDirectories');
+                const data = await response.json();
+                const directoryList = document.getElementById('directory-list');
 
-                            // Recursively list subdirectories
-                            const subdirectory = directory + '/' + item.name;
-                            listDirectories(subdirectory, listItem);
-                        }
-                    });
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+                data.forEach((directory) => {
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.textContent = directory;
+                    link.href = `./project/${directory}`;
+                    link.target = '_blank'; // Opens the link in a new tab
+                    listItem.appendChild(link);
+                    directoryList.appendChild(listItem);
                 });
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
 
-        // Start listing directories from the 'project' folder
-        listDirectories('project', document.getElementById('directory-list'));
+        // Call the function to list directories
+        listDirectories();
     </script>
 </body>
 </html>
